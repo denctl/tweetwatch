@@ -1,0 +1,84 @@
+@layout('layouts/main')
+@set('title', 'Tweetwatch - App')
+
+@section('body')
+<section class="bg-white tails-selected-element">
+    <div class="grid md:grid-cols-3 max-w-7xl px-5 py-20 w-full h-full items-center justify-center mx-auto gap-3">
+        <div class="h-full w-full bg-white rounded-md border-4">
+            <h2 class="text-center pt-6 text-3xl font-black">User</h2>
+            
+            <div class="px-6 pt-2 w-100">
+                <h2 class="top-1.5 relative mb-3">Username:</h2>
+                <input type="text" value="{{ auth.user.username }}" class="w-full rounded">
+            </div>
+
+            <div class="px-6 pt-2">
+                <h2 class="top-1.5 relative mb-3">Email Address:</h2>
+                <input type="text" value="{{ auth.user.email }}" class="w-full rounded">
+            </div>
+
+            <div class="px-6 pt-2">
+                <h2 class="top-1.5 relative mb-3">Password</h2>
+                <input type="text" class="w-full rounded" placeholder="Current Password">
+                <input type="text" class="w-full mt-2 rounded" placeholder="Confirm Password">
+            </div>
+
+            <div class="px-6 pt-6 pb-6 w-100 text-center">
+                <button id="dropdownInformationButton" data-dropdown-toggle="dropdownInformation" class="w-full text-xl text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-8 py-4 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">Save</button>
+            </div>
+        </div>
+        <div class="w-full h-full bg-white rounded-md border-4 grid grid-cols-1">
+            <div class="text-center m-auto">
+                <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?d=identicon&f=y" alt="" class="m-auto rounded-3xl border" style="width: 80px; height: 80px;">
+                <h1 class="text-center text-xl pt-6 font-black">Welcome, {{ auth.user.username }}!</h1>
+            </div>
+            <div class="text-center">
+                <a href="/dashboard" class="border py-8 px-16 rounded-xl text-xl bg-blue-700 text-white font-black">Dashboard</a>
+            </div>
+            <div class="text-center">
+                <a href="/logout" class="border py-4 px-8 rounded-xl text-xl bg-red-700 text-white font-black">Logout</a>
+            </div>
+            {{--  <div class="text-center">
+                <a href="/dashboard" class="border py-2 px-2 rounded-xl bg-red-700 text-white font-black">Logout</a>
+            </div>  --}}
+        </div>
+        <div class="h-full w-full bg-white rounded-md border-4">
+            <h2 class="text-center pt-6 text-2xl font-black">Billing</h2>
+            <div class="px-6 pt-6 w-100">
+                <h2 class="top-1.5 relative mb-3 font-black text-base">Subscription</h2>
+                <div class="grid grid-cols-2">
+                    {{--  <h1 class="p-3 rounded border-2 border-blue-500 bg-white text-xl">Default</h1>  --}}
+                    <select name="cars" id="cars" class="relative border border-gray-500 w-5/5 text-start rounded p-3 bg-white">
+                        <option value="starter">Starter</option>
+                        <option value="reporter">Independent Reporter</option>
+                        <option value="company">Company</option>
+                    </select>
+                    <button class="ml-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-2 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">Change</button>
+                </div>
+            </div>
+
+            <div class="px-6 pt-2 w-100">
+                <h2 class="top-1.5 relative mb-3 font-black text-base">Active Card</h2>
+                <div class="grid grid-cols-2">
+                    <h1 class="relative border border-gray-500 w-5/5 text-center rounded p-3 bg-white">**** **** **** 1539</h1>
+                    <button class="ml-3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg px-2 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">Change</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 mt-12 px-6 pt-2 w-full gap-6 text-center items-center">
+                <div class="">
+                    <h2 class="top-1.5 relative mb-3 font-black">Current Bill</h2>
+                    <h1>$18.36</h1>
+                </div>
+                <div class="">
+                    <h2 class="top-1.5 relative mb-3 font-black">Payment Date</h2>
+                    <h1>21.08.2022</h1>
+                </div>
+                <div class="text-center">
+                    <button class="text-sm relative top-3 ml-3 text-white bg-rose-700 font-medium rounded-lg px-2 py-2 text-center" type="button">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+@end

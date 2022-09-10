@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ title }}</title>
+<link rel="SHORTCUT ICON" href="assets/img/tweetwatch-light.png" type="image/x-icon" />
+<link rel="ICON" href="/img/tweetwatch-light.png" type="image/ico" />
+<script src="https://kit.fontawesome.com/962e4108cf.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://unpkg.com/flowbite@1.4.7/dist/flowbite.min.css" />
+<link rel="stylesheet" type="text/css" href="{{ asset('assets/app.css') }}">
+
+@!section('head')
+
+</head>
+
+<body style="height: auto;">
+<section class="w-full px-8 text-gray-700 bg-white border-b-4 z-50" style="position: sticky; top: 0px;">
+    <div class="flex flex-col flex-wrap items-center justify-between py-2 mx-auto md:flex-row max-w-7xl">
+    <div class="relative flex flex-col md:flex-row">
+    <a href="/" class="flex items-center mb-5 font-medium text-gray-900 lg:w-auto lg:items-center lg:justify-center md:mb-0">
+    <img src="/img/tweetwatch-light.png" class="w-14" alt="">
+    <nav class="flex flex-wrap items-center space-x-4 text-xs font-semibold tracking-wide uppercase sm:space-x-6">
+      <a href="/" class="text-gray-500 hover:text-gray-500">Home</a>
+      <a href="/tutorial" class="text-gray-500 hover:text-gray-500">Tutorial</a>
+    </nav>
+    </a>
+    </div>
+      <div class="inline-flex flex-col items-center sm:flex-row sm:ml-5 lg:justify-end">
+        @if (!auth.user)
+        <a href="/login" class="inline-flex tracking-wide uppercase text-xs items-center sm:mt-0 mt-5 sm:ml-4 justify-center px-5 py-2.5 font-semibold text-white bg-gray-800 border border-transparent rounded-md shadow-sm hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900">Watch a Tweet!</a>
+        @endif
+        @if (auth.user)
+
+        <a href="/dashboard" class="ml-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Dashboard</a>
+
+        <div class="py-3 px-4 text-sm text-gray-900 dark:text-white flex flex-col-2 gap-x-2">
+          <a href="/settings" class="cursor-pointer">
+            <img class="rounded-3xl border-2" src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?d=identicon&f=y" width="40" alt="">
+          </a>
+        </div>
+
+        {{--  <div class="py-2 px-2 text-base text-sm text-red-700 dark:text-white flex flex-col-2 gap-x-2">
+          <a href="/logout" class="cursor-pointer">
+            <li class="fa fa-sign-out hover:bottom-1 relative"></li>
+          </a>
+        </div>  --}}
+
+        <!-- Dropdown menu -->
+        <div id="dropdownInformation" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600 block" data-popper-placement="bottom" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(327px, 70px, 0px);">
+            {{--  <div class="py-3 px-4 text-sm text-gray-900 dark:text-white flex flex-col-2 gap-x-2">
+              <a href="settings">  
+                <img class="rounded-3xl border-2" src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50?d=identicon&f=y" width="40" alt="">
+              </a>
+              <div>
+                <p>Welcome,</p>
+                <div>{{ auth.user.username }}</div>
+              </div>  
+            </div>  --}}
+            {{--  <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownInformationButton">
+              <li>
+                <a href="/single-tweet" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Save a Tweet</a>
+              </li>
+              <li>
+                <a href="/dashboard" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+              </li>
+              <li>
+                <a href="/settings" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+              </li
+              <li>
+                <a href="/settings" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Billing</a>
+              </li>
+            </ul>
+            <div class="py-1">
+              <a href="/logout" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
+            </div>  --}}
+        </div>
+        
+        @endif
+      </div>
+    </div>
+  </section>
+
+  @if(auth.user)
+  <button type="button" data-modal-toggle="singleTweet" type="button" class="fixed bottom-4 -left-1 rounded px-6 py-3 text-xl bg-blue-500 text-white z-50">
+    <li class="fa fa-twitter"></li>
+  </button>
+  @endif
+  @if(!auth.user)
+  <a href="/login" class="fixed bottom-4 -left-1 rounded px-6 py-3 text-xl bg-blue-500 text-white z-50">
+  <li class="fa fa-twitter"></li>
+  </a>
+  @endif
+
+  <div id="singleTweet" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
+    <div class="relative p-4 w-full max-w-2xl h-full md:h-auto">
+        <!-- Modal content -->
+        <div class="relative bg-white dark:bg-gray-700 rounded-tl-lg rounded-tr-lg">
+            <!-- Modal header -->
+            <div class="flex justify-between items-start p-4 rounded-t">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                    Archive a Single Tweet
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="singleTweet">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6 space-y-6">
+              <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Tweet URL</label>
+              <input id="tweetInput" type="text" class="bg-gray-50 text-gray-900 text-sm rounded-lg focus:ring-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500" placeholder="e.g. https://twitter.com/denctl/status/1388550863912939522">
+              </div>
+              </div>
+              <div class="flex items-center p-6 space-x-2 rounded-b bg-white rounded-bl-lg rounded-br-lg">
+                  <button data-modal-toggle="singleTweet" id="tweetButton" type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add</button>
+                  <button data-modal-toggle="singleTweet" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancel</button>
+              </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+@!section('body')
+
+<section class="py-10">
+<div class="text-center">
+<a href="" class="fa fa-twitter mr-3"></a>
+<a href="" class="fa fa-telegram mr-3"></a>
+<a href="" class="fa-brands fa-discord mr-3"></a>
+<a href="" class="fa fa-at"></a>
+</div>
+<div class="text-center">
+<p class="text-xs">Created as a joke by <a href="https://twitter.com/denctl" class="text-blue-400">@denctl</a></p>
+</div>
+</section>
+</body>
+
+
+<script src="https://unpkg.com/flowbite@1.4.7/dist/flowbite.js"></script>
+
+<script>
+  let a = document.getElementById('tweetButton');
+  let b = document.getElementById('tweetInput');
+  // let toastSuccess = document.getElementById('toast-success');
+  // let toastError = document.getElementById('toast-danger');
+
+  a.onclick = async function() {
+      let url = `/screenshotSpecific/${encodeURIComponent(b.value)}`
+      const json = await fetch(url).then((response) => {
+          console.log(response.status);
+          // if(response.status == "203") {
+          //     toastSuccess.classList.remove('hidden');
+          //     toastSuccess.classList.remove('opacity-0');
+          // }
+          // else if (response.status == "204") {
+          //     toastError.classList.remove('hidden');
+          //     toastError.classList.remove('opacity-0');
+          // }
+      })
+  }
+</script>
+@!section('bodyScripts')
+</html>
