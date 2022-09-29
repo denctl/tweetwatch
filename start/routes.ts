@@ -33,7 +33,7 @@ Route.get('/settings', async ({ view }) => {
 })
 
 Route.get('single-tweet', 'TweetsController.singleTweet')
-Route.get('screenshot/:username?', 'TweetsController.screenshot')
+Route.get('screenshot/:username', 'TweetsController.screenshot')
 Route.get('screenshotSpecific/:url?', 'TweetsController.screenshotSpecific')
 
 

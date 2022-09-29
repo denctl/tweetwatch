@@ -3,7 +3,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 // import User from "App/Models/User";
-import TwitterAccounts from "App/Models/TwitterAccount";
+import TwitterAccount from "App/Models/TwitterAccount";
 import Tweets from "App/Models/Tweet";
 
 export default class TweetsController {
@@ -13,8 +13,8 @@ export default class TweetsController {
       const user = auth.user;
 
       if(user) {
-        const accounts = await TwitterAccounts.query().where('username', user.username).paginate(page, limit);
-        const tweets = await Tweets.query().where('username', user.username);
+        const accounts = await TwitterAccount.query().where('user_id', user.id).paginate(page, limit);
+        const tweets = await Tweets.query().where('user_id', user.id);
         accounts.baseUrl('/app')
         return view.render('app', { accounts, tweets })
       }
@@ -25,8 +25,10 @@ export default class TweetsController {
 
     public async tweets({ params, view, request, response, auth }: HttpContextContract) {
       let user = auth.user;
-      if(user) {
-        const tweets = await Tweets.query().where('username', user.username).where('account', params.account);
+      let twitterAccount = await user?.related('TwitterAccount').query().where('account', params.account).firstOrFail();
+
+      if(user && twitterAccount) {
+        const tweets = await Tweets.query().where('user_id', user.id).where('twitter_account_id', twitterAccount.id);
         return view.render('tweets', { tweets })
       }
     }
@@ -37,12 +39,12 @@ export default class TweetsController {
           account: schema.string(),
           category: schema.string(),
         })
-        
+
         const data = await request.validate({ schema: accountAdd })
-        await TwitterAccounts.create({
-          username: auth.user.username,
+        await TwitterAccount.create({
           account: data.account,
-          category: data.category
+          category: data.category,
+          user_id: auth.user.id
         }) 
         return response.redirect().back();
       }
@@ -52,7 +54,7 @@ export default class TweetsController {
       const user = auth.user;
 
       if(user) {
-        await TwitterAccounts.query().where('account', params.accountName).where('username', user.username).delete()
+        await TwitterAccount.query().where('account', params.accountName).where('user_id', user.id).delete()
       }
     }
 
@@ -92,19 +94,25 @@ export default class TweetsController {
       }
     }
 
-    public async screenshot({ params, response }: HttpContextContract) {
+    public async screenshot({ params, response, auth }: HttpContextContract) {
       if(params.username) {
+        if(!auth.user) {
+          return response.status(401)
+        }
+        const user = auth.user;
+        const twitterAccount = await user.related('TwitterAccount').query().where('account', params.username).firstOrFail();
+
         const puppeteer = require("puppeteer");
         const axios = require('axios');
         const chromium = require('chromium');
         const token = "AAAAAAAAAAAAAAAAAAAAAMJhbQEAAAAAWvwo3qwlN5D1pWpKl%2BNi98bGtDM%3DzYCPTQAGKL6CjTo3ceQA1Hw5vNmRnmUzZbsZHwPgOEjTOxzl6B"
-        let responseTweet = await axios.get(`https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${params.username}&count=1/users`, { headers: {"Authorization" : `Bearer ${token}`} }).then(res => {
+        let responseTweet = await axios.get(`https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${twitterAccount.account}&count=1/users`, { headers: {"Authorization" : `Bearer ${token}`} }).then(res => {
             return res.data[0].id_str
           })
           .catch(error => {
             console.error(error);
         });
-        let screenshotFile = `./public/tweets/${params.username}-${responseTweet}.jpg`
+        let screenshotFile = `./public/tweets/${twitterAccount.account}-${responseTweet}.jpg`
 
         if (responseTweet) {
           puppeteer
@@ -118,8 +126,8 @@ export default class TweetsController {
           })
           .then(async (browser) => {
             const page = await browser.newPage();
-            await page.goto(`https://twitter.com/${params.username}/status/${responseTweet}`, { waitUntil: 'networkidle0' });
-            await page.screenshot({ 
+            await page.goto(`https://twitter.com/${twitterAccount.account}/status/${responseTweet}`, { waitUntil: 'networkidle0' });
+            await page.screenshot({
               path: screenshotFile,
               clip: {
                 x: 1550,
@@ -131,7 +139,12 @@ export default class TweetsController {
             await browser.close();
           });
           response.status(203)
-           
+           // Save tweet to database
+          await Tweets.create({
+            user_id: user.id,
+            twitter_account_id: twitterAccount.id,
+            tweet: `/tweets/${twitterAccount.account}-${responseTweet}.jpg`
+          })
         }
         else {
           response.status(204)
@@ -181,8 +194,7 @@ export default class TweetsController {
             response.status(203)
 
             await Tweets.create({
-              account: accountName,
-              username: user.username,
+              user_id: user.id,
               tweet: `/tweets/${accountName}-${id}.jpg`
             })
           }

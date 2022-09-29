@@ -2,6 +2,7 @@ import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
 import { column, beforeSave, BaseModel, manyToMany, ManyToMany, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
 import TwitterAccount from 'App/Models/TwitterAccount'
+import Tweet from 'App/Models/Tweet'
 import Category from 'App/Models/Category'
 
 export default class User extends BaseModel {
@@ -34,4 +35,7 @@ export default class User extends BaseModel {
   }
   @hasMany(() => TwitterAccount)
   public TwitterAccount: HasMany<typeof TwitterAccount>
+
+  @hasMany(() => Tweet)
+  public Tweet: HasMany<typeof Tweet>
 }
