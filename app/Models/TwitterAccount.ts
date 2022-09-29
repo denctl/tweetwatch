@@ -9,8 +9,8 @@ export default class TwitterAccount extends BaseModel {
   public id: number
 
   @column()
-  public username: string
-  
+  public userId: number
+
   @column()
   public account: string
 
@@ -19,9 +19,6 @@ export default class TwitterAccount extends BaseModel {
 
   @column()
   public category_id: number
-
-  @column()
-  public tweet_id: number
 
   // @column()
   // public category: string
