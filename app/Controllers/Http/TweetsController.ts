@@ -5,6 +5,7 @@ import { schema, rules } from '@ioc:Adonis/Core/Validator'
 // import User from "App/Models/User";
 import TwitterAccount from "App/Models/TwitterAccount";
 import Tweets from "App/Models/Tweet";
+import axios from 'axios';
 
 export default class TweetsController {
     public async app({ view, request, response, auth }: HttpContextContract) {
@@ -26,14 +27,27 @@ export default class TweetsController {
     public async tweets({ params, view, request, response, auth }: HttpContextContract) {
       let user = auth.user;
       let twitterAccount = await user?.related('TwitterAccount').query().where('account', params.account).firstOrFail();
-
       if(user && twitterAccount) {
-        const tweets = await Tweets.query().where('user_id', user.id).where('twitter_account_id', twitterAccount.id);
+        const tweets = await Tweets.query().where('user_id', user.id);
         return view.render('tweets', { tweets })
       }
     }
 
     public async addAccount({ request, response, auth }: HttpContextContract) {
+      // check if account already exists in database for user
+      const user = auth.user;
+      const account = request.input('account')
+      const twitterAccount = await user?.related('TwitterAccount').query().where('account', account).first();
+      // twitter api call to check if account exists
+      const token = "AAAAAAAAAAAAAAAAAAAAAMJhbQEAAAAAWvwo3qwlN5D1pWpKl%2BNi98bGtDM%3DzYCPTQAGKL6CjTo3ceQA1Hw5vNmRnmUzZbsZHwPgOEjTOxzl6B"
+      let accountExistsOnTwitter = await axios.get(`https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=${account}&count=1/users`, { headers: {"Authorization" : `Bearer ${token}`} }).then((response) => {
+        return true
+      }).catch((error) => {
+        return false
+      })
+
+
+      
       if(auth.user) {
         const accountAdd = schema.create({
           account: schema.string(),
@@ -41,12 +55,19 @@ export default class TweetsController {
         })
 
         const data = await request.validate({ schema: accountAdd })
-        await TwitterAccount.create({
-          account: data.account,
-          category: data.category,
-          user_id: auth.user.id
-        }) 
-        return response.redirect().back();
+
+        if(!twitterAccount && accountExistsOnTwitter) {
+          await TwitterAccount.create({
+            account: data.account,
+            category: data.category,
+            userId: auth.user.id
+          }) 
+          return response.redirect().back();
+        }
+        else {
+          // redirect back
+          return response.redirect().back();
+        }
       }
     }
 
@@ -141,8 +162,8 @@ export default class TweetsController {
           response.status(203)
            // Save tweet to database
           await Tweets.create({
-            user_id: user.id,
-            twitter_account_id: twitterAccount.id,
+            userId: user.id,
+            twitter_accountId: twitterAccount.id,
             tweet: `/tweets/${twitterAccount.account}-${responseTweet}.jpg`
           })
         }
@@ -194,7 +215,7 @@ export default class TweetsController {
             response.status(203)
 
             await Tweets.create({
-              user_id: user.id,
+              userId: user.id,
               tweet: `/tweets/${accountName}-${id}.jpg`
             })
           }

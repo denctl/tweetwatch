@@ -75,9 +75,11 @@
                                     <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ asd.account }}
                                     </th>
+                                    @if(tweets)
                                     <td class="py-4 px-6">
-                                        {{ asd.account.tweets }}
+                                        {{ tweets.length }}
                                     </td>
+                                    @end
                                     <td class="py-4 px-6">
                                         <form class="w-3/4">
                                             <div class="relative">
