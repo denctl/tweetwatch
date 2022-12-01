@@ -12,7 +12,7 @@ export default class Tweet extends BaseModel {
   public userId: number
 
   @column()
-  public twitter_accountId: number
+  public twitterAccountId: number
 
   @column()
   public tweet: string

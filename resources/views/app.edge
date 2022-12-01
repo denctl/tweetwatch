@@ -77,7 +77,7 @@
                                     </th>
                                     @if(tweets)
                                     <td class="py-4 px-6">
-                                        {{ tweets.length }}
+                                        {{ asd.related('tweets') }}
                                     </td>
                                     @end
                                     <td class="py-4 px-6">
@@ -109,15 +109,6 @@
                     </div>
                 </div>
                 @if(accounts)
-{{--  <nav aria-label="Page navigation example" class="mt-4">
-    <ul class="inline-flex items-center -space-x-px">
-    @each(records in accounts.getUrlsForRange(1, accounts.lastPage))
-        <li>
-            <a href="{{ records.url }}" class="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{ records.page }}</a>
-          </li>
-    @endeach
-    </ul>
-  </nav>  --}}
 @end
 
                 </div>
