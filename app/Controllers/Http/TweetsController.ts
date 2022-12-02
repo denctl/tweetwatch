@@ -17,7 +17,7 @@ export default class TweetsController {
       const user = auth.user;
 
       if(user) {
-        const accounts = await TwitterAccount.query().where('user_id', user.id).paginate(page, limit);
+        const accounts = await TwitterAccount.query().preload('tweets').where('user_id', user.id).paginate(page, limit);
         const tweets = await Tweets.query().where('user_id', user.id);
         // const tweets = await user?.related('TwitterAccount').query().where('tweets', user.id);
         accounts.baseUrl('/app')
@@ -32,8 +32,7 @@ export default class TweetsController {
       let user = auth.user;
       let twitterAccount = await user?.related('TwitterAccount').query().where('account', params.account).firstOrFail();
       if(user && twitterAccount) {
-        // const tweets = await Tweets.query().where('twitterAccount', user.id);
-        const tweets = twitterAccount.tweets
+        const tweets = await Tweets.query().where('twitter_account_id', twitterAccount.id).where('user_id', user.id);
         return view.render('tweets', { tweets, twitterAccount })
       }
     }
@@ -129,7 +128,6 @@ export default class TweetsController {
     //     }
     //     const user = auth.user;
     //     const twitterAccount = await user.related('TwitterAccount').query().where('account', params.username).firstOrFail();
-
     //     const puppeteer = require("puppeteer");
     //     const axios = require('axios');
     //     const chromium = require('chromium');
@@ -205,7 +203,7 @@ export default class TweetsController {
     //        // Save tweet to database
     //       await Tweets.create({
     //         userId: user.id,
-    //         twitter_accountId: twitterAccount.id,
+    //         twitterAccountId: twitterAccount.id,
     //         tweet: `/tweets/${twitterAccount.account}-${responseTweet}.jpg`
     //       })
     //     }
