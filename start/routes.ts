@@ -20,9 +20,7 @@
 import Route from '@ioc:Adonis/Core/Route'
 import TweetsController from 'App/Controllers/Http/TweetsController'
 
-Route.get('/', async ({ view }) => {
-  return view.render('welcome')
-})
+Route.get('/', 'TweetsController.index')
 
 // Route.get('/dashboard', async ({ view }) => {
 //   return view.render('dashboard')

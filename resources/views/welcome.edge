@@ -1,55 +1,109 @@
 @layout('layouts/main')
-@set('title', 'Tweetwatch')
+@set('title', 'Tweetwatch - Single Tweet')
 
 @section('body')
-<section class="relative px-2 bg-white py-14 md:px-0 tails-selected-element">
-    <div class="relative top-0 left-0 items-center justify-center w-full h-full md:absolute">
-        <div class="relative z-20 h-full px-8 mx-auto max-w-7xl xl:px-5">
-            <div class="flex flex-wrap items-center h-full sm:-mx-3">
-                <div class="w-full pl-10 pr-10 sm:pl-0 md:w-1/2 xl:pr-3">
-                    <div class="w-full pb-6 pl-0 space-y-4 sm:pl-10 md:max-w-md lg:max-w-lg md:space-y-5 lg:space-y-6 xl:space-y-7 sm:pr-5 lg:pr-0 md:pb-0">
-                        <p class="font-medium tracking-wide text-blue-600 uppercase" data-primary="blue-600">Tweet Watch</p>
-                        <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-8xl">
-                            Archive 🧊 
-                            <span style="color: #1d9bf0">🐤 Tweets</span>
-                        </h1>
-                        <p class="mx-auto text-base text-gray-500 lg:leading-9 md:max-w-md lg:text-xl md:max-w-3xl">Yes, you can use it to cancel celebrities . . .</p>
-                        <div class="relative flex flex-col space-y-3 lg:flex-row lg:space-y-0 lg:space-x-4 md:pr-10 lg:pr-0">
-                            <a href="/dashboard" class="flex items-center w-full px-6 py-3 mb-3 text-lg text-white bg-blue-600 rounded-md sm:mb-0 hover:bg-blue-700 sm:w-auto" data-rounded="rounded-md" data-primary="blue-600">
-                                Start Archiving
-                            </a>
-                            <a href="#_" class="flex items-center px-6 py-3 bg-transparent border border-gray-800 rounded-md hover:bg-gray-50" data-rounded="rounded-md">
-                                Watch Video
-                            </a>
-                        </div>
+<section class="w-full relative py-48 antialiased" style="background: #1d9bf0;">
+<div class="mx-auto max-w-7xl">
+<div class="container mx-auto text-center sm:px-4">
+
+<h1 class="text-4xl font-extrabold leading-10 tracking-tight text-white sm:text-5xl sm:leading-none md:text-6xl xl:text-7xl"><span class="block">One, Two, Snap!</span></h1>
+<div class="max-w-lg mx-auto mt-6 text-sm text-center text-indigo-200 md:mt-12 sm:text-base md:max-w-xl md:text-lg xl:text-xl">Enter the URL for the specific tweet you'd like to archive:
+    <br>
+    <small class="italic">
+        e.g. https://twitter.com/denctl/status/1388550863912939522
+    </small>
+</div>
+<div class="relative flex items-center max-w-xl mx-auto mt-12 overflow-hidden text-center rounded-full">
+<input id="tweetInput" type="text" placeholder="https://twitter.com/..." class="w-full h-12 px-6 py-2 font-medium text-indigo-800 focus:outline-none">
+<span class="relative top-0 right-0 block">
+<button id="tweetButton" type="submit" class="inline-flex items-center w-32 h-12 px-8 text-base font-bold leading-6 text-white transition duration-150 ease-in-out bg-gray-700 border border-transparent hover:bg-white hover:text-black focus:outline-none active:bg-indigo-700">
+archive
+</button>
+</span>
+</div>
+<div class="mt-8 text-sm text-white">By clicking the button, you agree to whatever.</div>
+</div>
+</div>
+<img src="assets/img/tweetwatch-light.png" style="width: 300px; transform: rotate(30deg); opacity: .5;" class="absolute bottom-24 right-24" alt="">
+<img src="assets/img/tweetwatch-light.png" style="width: 300px; transform: rotate(-30deg); opacity: .5;" class="absolute bottom-24 left-24" alt="">
+</section>
+
+<div id="toast-success" class="hidden flex items-center p-4 mb-4 w-full max-w-xs text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800 absolute bottom-0 right-3" role="alert">
+    <div class="inline-flex flex-shrink-0 justify-center items-center w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200">
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+        <span class="sr-only">Check icon</span>
+    </div>
+    <div class="ml-3 text-sm font-normal">Username successfully added to screenshot list.</div>
+    <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-success" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+    </button>
+</div>
+
+<div id="toast-danger" class="hidden absolute bottom-0 right-3 flex items-center p-4 mb-4 w-full max-w-xs text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
+    <div class="inline-flex flex-shrink-0 justify-center items-center w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+        <span class="sr-only">Error icon</span>
+    </div>
+    <div class="ml-3 text-sm font-normal">The username does not exist.</div>
+    <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700" data-dismiss-target="#toast-danger" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+    </button>
+</div>
+
+
+<div class="pt-16 pb-16 pl-4 pr-4 mx-auto ml-auto mr-auto bg-top bg-cover max-w-7xl md:px-24 lg:px-12 lg:py-20 tails-selected-element">
+    <div class="mb-10 ml-auto mr-auto bg-top bg-cover max-w-7xl md:mx-auto sm:text-center lg:max-w-2xl md:mb-16">
+        <div class="mb-6 ml-auto mr-auto font-sans tracking-tight text-gray-900 bg-top bg-cover max-w-7xl md:mx-auto">
+            <p class="inline max-w-lg text-3xl font-bold leading-none tracking-tight text-gray-900 sm:text-5xl md:mx-auto">Tweets</p>
+        </div>
+        <p class="text-base text-gray-700 md:text-lg">Those are the latest archived tweets by people on the internet. It's all annonymous so I can't tell you who canceled you.</p>
+    </div>
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+
+        
+        @each(tweet in tweets)
+        <!-- Team Member 1 -->
+        <div>
+            <div class="relative overflow-hidden rounded-md shadow-lg group">
+                <img class="object-cover w-full h-100" src="https://tweetwatch.fra1.digitaloceanspaces.com/{{tweet.tweet}}" alt="Team Member Name">
+                <div class="absolute inset-0 px-6 py-4 text-center duration-300 opacity-0 group-hover:opacity-100">
+                    <div class="absolute inset-0 w-full h-full bg-gradient-to-br from-white opacity-60 to-white"></div>
+                    <div class="relative flex flex-col items-center justify-center w-full h-full">
+                        <a target="_blank" href="https://twitter.com/{{tweet.tweet.split('/')[0]}}/status/{{tweet.tweet.split('/')[1].replace(/\.jpg$/, '')}}" class="bg-white border-4 border-black p-4 rounded-lg text-xl font-bold" style="box-shadow: 8px 8px 0px 0px black;">Link to Twitter</a>
                     </div>
-                </div>
-                <div class="w-full md:w-1/2">
-                    <!-- intentionally leaving this empty -->
                 </div>
             </div>
         </div>
-    </div>
-    <div class="relative top-0 left-0 z-10 flex items-center w-full h-full py-28">
-        <div class="hidden w-1/2 ml-48 md:block">
-            <!-- left side leaving empty so that way the laptop can span full width on the right -->
-        </div>
-        <div class="w-full">
-            <iframe src="https://giphy.com/embed/896NyHxKgOwc8UoIar" width="480" height="362" frameBorder="0" class="giphy-embed w-full transform" allowFullScreen></iframe>
-        </div>
-    </div>
-</section>
+        @endeach
+        
 
-{{--  <section class="py-8 border-t border-b border-blue-100 bg-blue-50">
-<div class="container mx-auto">
- <div class="flex flex-col items-center content-center justify-center text-center lg:flex-row lg:text-left">
-<img class="self-start w-auto h-24 px-4 mx-auto -mt-1 lg:mx-0" alt="Get Started" src="https://cdn.devdojo.com/images/december2020/coffee-start.png">
-<div class="flex flex-col content-center px-4 mx-4 my-6">
-<h4 class="pb-0 mb-0 text-lg font-semibold mb-md-0">Follow me on Twitter for more stupid s*%t!</h4>
-<p class="mb-0 text-gray-700">I build projects for good and evil use.</p>
+    </div>
 </div>
-<a href="https://twitter.com/denctl" target="_blank" class="px-4 py-2 font-semibold text-white bg-green-500 border border-green-700 rounded shadow btn btn-secundary hover:bg-green-600">Follow Me</a>
-</div>
-</div>
-</section>  --}}
+@end
+
+@section('bodyScripts')
+<script>
+    let a = document.getElementById('tweetButton');
+    let b = document.getElementById('tweetInput');
+    let toastSuccess = document.getElementById('toast-success');
+    let toastError = document.getElementById('toast-danger');
+
+    a.onclick = async function() {
+        let url = `/screenshotSpecific/${encodeURIComponent(b.value)}`
+
+        const json = await fetch(url).then((response) => {
+            console.log(response.status);
+            if(response.status == "203") {
+                toastSuccess.classList.remove('hidden');
+                toastSuccess.classList.remove('opacity-0');
+            }
+            else if (response.status == "204") {
+                toastError.classList.remove('hidden');
+                toastError.classList.remove('opacity-0');
+            }
+        })
+    }
+</script>
 @end
